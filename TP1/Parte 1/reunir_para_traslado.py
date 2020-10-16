@@ -1,5 +1,7 @@
 import heapq
+import csv
 
+from pathlib import Path
 from functools import reduce
 from bovedas import Boveda
 from obras import Obra
@@ -36,9 +38,16 @@ def reunir_obras(bovedas_init):
 
 
 def __main__():
-    bovedas_init = [Boveda('A', Obra('P1', 5)), Boveda('B', Obra('P2', 4)), Boveda(
-        'C', Obra('P3', 2)), Boveda('D', Obra('P4', 6))]
-    reunir_obras(bovedas_init)
+    base_path = Path(__file__).parent
+    with open(str(base_path) + '/valor_obras.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        row = next(csv_reader)
+
+        bovedas = []
+        for idx, valor in enumerate(row):
+            bovedas.append(Boveda(chr(idx+65), Obra('P' + str(idx+1), int(valor))))
+
+        reunir_obras(bovedas)
 
 
 __main__()
