@@ -1,5 +1,6 @@
 import heapq
 import csv
+import sys
 
 from pathlib import Path
 from functools import reduce
@@ -23,31 +24,39 @@ def imprimir_pagos(pagos):
     print(cadena)
 
 
-def reunir_obras(bovedas_init):
-    bovedas = bovedas_init
-    pagos = []
-    heapq.heapify(bovedas)
-    while(len(bovedas) > 1):
-        boveda_a = heapq.heappop(bovedas)
-        boveda_b = heapq.heappop(bovedas)
-        imprimir_movimiento(boveda_a, boveda_b)
-        boveda_b += boveda_a
-        heapq.heappush(bovedas, boveda_b)
-        pagos.append(boveda_b.obtener_precio_acumulado())
-    imprimir_pagos(pagos)
+def reunir_obras(bovedas_init,cantidad_de_piezas):
+	if len(bovedas_init) < cantidad_de_piezas:
+		print("Cantidad de valoraciones insuficientes.")
+	else:
+		bovedas = bovedas_init
+		pagos = []
+		heapq.heapify(bovedas)
+		for i in range(cantidad_de_piezas-1):
+			boveda_a = heapq.heappop(bovedas)
+			boveda_b = heapq.heappop(bovedas)
+			imprimir_movimiento(boveda_a, boveda_b)
+			boveda_b += boveda_a
+			heapq.heappush(bovedas, boveda_b)
+			pagos.append(boveda_b.obtener_precio_acumulado())
+		imprimir_pagos(pagos)
 
 
 def __main__():
-    base_path = Path(__file__).parent
-    with open(str(base_path) + '/valor_obras.csv') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        row = next(csv_reader)
+	if len(sys.argv)  < 3:
+		print("Argumentos insuficientes.\nIndique la cantidad de piezas y el path al archivo de valoraciones.")
+	else:
+		path = sys.argv[2]
+		try:
+			with open(str(path)) as csv_file:
+				csv_reader = csv.reader(csv_file, delimiter=',')
+				row = next(csv_reader)
 
-        bovedas = []
-        for idx, valor in enumerate(row):
-            bovedas.append(Boveda(chr(idx+65), Obra('P' + str(idx+1), int(valor))))
+				bovedas = []
+				for idx, valor in enumerate(row):
+					bovedas.append(Boveda(chr(idx+65), Obra('P' + str(idx+1), int(valor))))
 
-        reunir_obras(bovedas)
-
+				reunir_obras(bovedas,int(sys.argv[1]))
+		except FileNotFoundError:
+			print("Archivo de valoraciones no encontrado.")
 
 __main__()
