@@ -2,7 +2,6 @@ import heapq
 import csv
 import sys
 
-from pathlib import Path
 from functools import reduce
 from bovedas import Boveda
 from obras import Obra
@@ -25,8 +24,8 @@ def imprimir_pagos(pagos):
 
 
 def reunir_obras(bovedas_init,cantidad_de_piezas):
-	if len(bovedas_init) < cantidad_de_piezas:
-		print("Cantidad de valoraciones insuficientes.")
+	if len(bovedas_init) != cantidad_de_piezas:
+		print("La cantidad de piezas especificada difiere con la cantidad de piezas en el archivo de valoraciones.")
 	else:
 		bovedas = bovedas_init
 		pagos = []
