@@ -1,6 +1,14 @@
+class PrecioNegativoException(Exception):
+    def __init__(self, mensaje="El precio es menor a 0"):
+        self.message = mensaje
+        super().__init__(self.message)
+
+
 class Obra:
 
     def __init__(self, nombre, precio):
+        if(precio < 0):
+            raise PrecioNegativoException
         self._nombre = nombre
         self._precio = precio
 
