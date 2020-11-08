@@ -7,23 +7,26 @@ class Node():
   def __gt__(self, other):
     return self.value > other.value
 
-  def getStartAndEndIndex(self):
+  def getCoincidenceIndices(self):
     node = self.prev
-    start = self.index
-    end = self.index
+    indices = [self.index] if self.prev.value < self.value else []
 
     while(node and node.value > 0):
-      start = node.index
+      if (node.prev.value < node.value):
+        indices.insert(0, node.index)
+
       node = node.prev
 
-    return (start, end)
+    return indices
+
 
 class PasswordChecker():
   def __init__(self, userInfo, password):
     self.userInfo = userInfo
     self.password = password
     self.longestCoincidence = Node()
-    self.saved = [[Node() for k in range(len(password))] for i in range(len(userInfo))]
+    self.saved = [[Node() for k in range(len(password))]
+                  for i in range(len(userInfo))]
 
   def save(self, userInfoIndex, passwordIndex, value):
     self.saved[userInfoIndex][passwordIndex] = value
@@ -43,14 +46,36 @@ class PasswordChecker():
         else:
           self.saved[i][k] = self.getSavedValue(i, k - 1)
 
+  def getCoincidenceFromIndices(self, indices):
+    i = 0
+    marked = []
+    opened = False
+    for index, letter in enumerate(self.password):
+      if i < len(indices) and indices[i] == index:
+        i += 1
+        if not opened:
+          marked = marked + ['(', letter]
+          opened = True
+        else:
+          marked.append(letter)
+      else:
+        if opened:
+          marked = marked + [')', letter]
+          opened = False
+        else:
+          marked.append(letter)
+    marked = marked + [')'] if opened else marked
+    return ''.join(marked)
+
   def getLongestCoincidence(self):
     if len(self.password) == 0 or len(self.userInfo) == 0:
       return (0, '')
 
     self.calculate()
     longestCoincidence = max([k[-1] for k in self.saved])
-    start, end = longestCoincidence.getStartAndEndIndex()
-    return (longestCoincidence.value, self.password[start:end + 1])
+    indices = longestCoincidence.getCoincidenceIndices()
+    return (longestCoincidence.value, self.getCoincidenceFromIndices(indices))
+
 
 userInfo = ['rksmith', 'rick', 'smith', '']
 
