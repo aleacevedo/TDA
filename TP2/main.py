@@ -42,9 +42,9 @@ class PasswordChecker():
       for k in range(len(self.password)):
         if (self.password[k] == self.userInfo[i]):
           prev = self.getSavedValue(i - 1, k - 1)
-          self.saved[i][k] = Node(1 + prev.value, k, prev)
+          self.saved[i][k] = max(Node(1 + prev.value, k, prev), self.getSavedValue(i - 1, k))
         else:
-          self.saved[i][k] = self.getSavedValue(i, k - 1)
+          self.saved[i][k] = max(self.getSavedValue(i, k - 1), self.getSavedValue(i - 1, k))
 
   def getCoincidenceFromIndices(self, indices):
     i = 0
@@ -77,9 +77,9 @@ class PasswordChecker():
     return (longestCoincidence.value, self.getCoincidenceFromIndices(indices))
 
 
-userInfo = ['rksmith', 'rick', 'smith', '']
+userInfo = ['rksmith', 'rick', 'smith', 'raks', '']
 
-password = 'r_1kcksmi7t'
+password = 'r_1ksmi7t'
 
 for info in userInfo:
   checker = PasswordChecker(info, password)
