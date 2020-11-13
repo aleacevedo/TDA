@@ -72,14 +72,14 @@ class PasswordChecker():
       return (0, '')
 
     self.calculate()
-    longestCoincidence = max([k[-1] for k in self.saved])
+    longestCoincidence = self.saved[-1][-1]
     indices = longestCoincidence.getCoincidenceIndices()
     return (longestCoincidence.value, self.getCoincidenceFromIndices(indices))
 
 
 userInfo = ['rksmith', 'rick', 'smith', 'raks', '']
 
-password = 'r_1ksmi7t'
+password = 'r_1kksmi7t'
 
 for info in userInfo:
   checker = PasswordChecker(info, password)
