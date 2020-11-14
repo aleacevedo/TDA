@@ -1,5 +1,5 @@
 import sys
-from password_checker import MultiChecker
+from password_checker_v2 import MultiChecker
 
 USER_INFO_KEYS = ['username', 'nombre', 'apellido']
 
