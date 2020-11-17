@@ -1,0 +1,81 @@
+Def:
+    Nodo(nombre, ejes=[])
+    Eje(desde, hasta, capacidad, flujo = 0)
+    Grafo(start, end)
+
+tareas # lista de tareas con {inicio, fin, horas}
+maquinas # lista de maquinas disponibles
+
+generarGrafo(tareas):
+    start = Nodo(nombre: "start")
+    end = Nodo(nombre: "end")
+    grafo = Grafo(start, end)
+    for tarea in tareas:
+        grafo.nuevoNodo(tarea)
+        for hora in range(tarea.inicio, tarea.fin):
+            if(not hora in Grafo):
+                grafo.nuevoNodo(hora)
+                grafo.nuevoEje(start, hora, cantMaquinas)
+            Grafo.nuevoEje(hora, tarea, 1)
+        grafo.nuevoEje(tarea, end, tarea.horas)
+
+obtenerCuelloBotella(camino):
+    cuelloDeBotella = camino[0].capacidad
+    for e in camino:
+        if e.capacidad < cuelloDeBotella:
+            cuelloDeBotella = e.capacidad
+    return cuelloDeBotella
+
+generarCamino(grafo, start, camino = [], nodosVisitados = []):
+    nodosVisitados.append(eje.hasta)
+    for eje in grafo.obtenerEjesDesde(start):
+        if eje.capacidad > 0 and not eje.hasta in nodosVisitados:
+            camino.append(eje)
+            return generarCamino(grafo, eje.hasta, camino, nodosVisitados)
+    return camino
+
+aumentar(grafo, camino, b):
+    for eje in camino:
+        eje.capacidad -= b
+        eje.flujo += b
+        if grafo.contieneEje(eje.hasta, eje.desde)
+            grafo.eje(eje.hasta, eje.desde).capacidad += b
+            grafo.eje(eje.hasta, eje.desde).flujo -= b
+        else:
+            grafo.nuevoEje(eje.hasta, eje.desde, eje.flujo, eje.capacidad)
+
+ford-fulkerson(grafo):
+    flujoMaximo = 0
+    camino = generarCamino(grafo)
+    b = obtenerCuelloBotella(camino)
+    while camino[-1] == grafo.end:
+        flujoMaximo += b
+        aumentar(grafo, camino, b)
+        camino = generarCamino(grafo)
+    return flujoMaximo
+
+grafo = generarGrafo(tareas)
+flujoMaximo = ford-fulkerson(grafo)
+if sum(tareas.horas) != flujoMaximo:
+    raise "No se puede realizar todas las tareas"
+
+for eje_hora in grafo.start.ejes:
+    hora = eje_hora.hasta
+    maquinaParaTrabajar = 0
+    for eje_tarea in hora:
+        tarea = eje_tarea.hasta
+            if tarea.horas > 0 and maquinas.length > maquinaParaTrabajar:
+                tarea.horas--
+                print("1 hora de tarea {tarea} realizada por maquina {maquinas[maquinaParaTrabjajar]} quedan {tareas.horas} para realizar")
+                maquinaParaTrabajar++
+            
+
+
+
+
+
+
+
+
+        
+
